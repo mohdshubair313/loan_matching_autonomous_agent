@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Engine | File Upload</title>
+    <style>
+        :root {
+            --color-primary: #8a2be2;
+            --color-secondary: #00bcd4;
+            --color-text-light: #e0e0e0;
+            --color-background-dark: #121218;
+            --color-card-dark: #1e1e24;
+            --transition-speed: 0.3s;
+            --box-shadow-elevation: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-background-dark);
+            color: var(--color-text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                    var(--color-primary),
+                    var(--color-background-dark) 50%,
+                    var(--color-secondary));
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            opacity: 0.7;
+            z-index: -1;
+            filter: blur(100px);
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .upload-container {
+            background-color: var(--color-card-dark);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--box-shadow-elevation);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transform: translateY(0);
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out;
+        }
+
+        .upload-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 20px var(--color-primary);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: var(--color-primary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 15px;
+            background-color: transparent;
+            border: 2px dashed var(--color-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--color-text-light);
+            transition: all var(--transition-speed) ease;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .file-input-label:hover {
+            background-color: rgba(0, 188, 212, 0.1);
+            /* Light hover background */
+            border-color: var(--color-primary);
+            transform: scale(1.02);
+            /* Subtle hover motion */
+        }
+
+        /*
+        =========================================================
+        BUTTON STYLES
+        =========================================================
+        */
+        button[type="submit"] {
+            padding: 15px 30px;
+            background-image: linear-gradient(90deg, var(--color-primary), #a64dff);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* Smooth & bouncy transition */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Hover effect: Subtle color shift and lift */
+        button[type="submit"]:hover {
+            background-image: linear-gradient(90deg, #a64dff, var(--color-primary));
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.7);
+        }
+
+        /* Motion effect: Ripple/Shine effect */
+        button[type="submit"]::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            /* Light overlay for shine */
+            transition: all 0.5s ease;
+            z-index: 0;
+            transform: skewX(-20deg);
+        }
+
+        button[type="submit"]:hover::after {
+            left: 100%;
+        }
+
+        /*
+        =========================================================
+        FOOTER/INFO STYLES
+        =========================================================
+        */
+        .info-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+
+        .info-section a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .info-section a:hover {
+            color: var(--color-primary);
+            /* Change color on hover */
+            text-decoration: underline;
+        }
+
+        /* Added alignment for the console log message */
+        .ready-message {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.75rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="upload-container">
+        <h1>Upload User CSV</h1>
+
+        <form action="/api/upload-csv/" enctype="multipart/form-data" method="post">
+            <input type="file" name="file" id="csvFile" accept=".csv" required>
+
+            <label for="csvFile" class="file-input-label">
+                <span id="fileName">📁 Choose a CSV File...</span>
+            </label>
+
+            <button type="submit">
+                Upload & Process
+            </button>
+        </form>
+
+        <div class="info-section">
+            <p>Sample CSV: <a href="https://drive.google.com/..." target="_blank">Download Template</a></p>
+        </div>
+    </div>
+
+    <div class="ready-message">
+        Ready!
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('csvFile');
+        const fileNameDisplay = document.getElementById('fileName');
+
+        fileInput.addEventListener('change', (event) => {
+            if (event.target.files.length > 0) {
+                fileNameDisplay.textContent = '✅ ' + event.target.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '📁 Choose a CSV File...';
+            }
+        });
+
+        console.log("Ready!");
+    </script>
+</body>
+
+</html>
